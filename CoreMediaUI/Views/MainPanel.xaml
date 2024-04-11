@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:globals="clr-namespace:CoreMediaUI.Views.Components.Globals"
+             x:Class="CoreMediaUI.Views.MainPanel"
+             Shell.NavBarIsVisible="False"
+             Title="MainPanel">
+    <Grid Background="WhiteSmoke">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <globals:Header/>
+        <Frame Grid.Row="1" 
+                Background="#acbfc2"
+                Margin="4, 0, 4, 4"
+                CornerRadius="4">
+
+            <Grid ColumnSpacing="16"
+                  RowSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Frame Background="WhiteSmoke" Grid.RowSpan="3">
+                    <globals:MainActions/>
+                </Frame>
+
+                <Frame Background="WhiteSmoke" Grid.Column="1">
+
+                </Frame>
+
+                <Frame Background="WhiteSmoke" Grid.Column="1" Grid.Row="1">
+
+                </Frame>
+                
+                <Frame Background="WhiteSmoke" Grid.Column="1" Grid.Row="2">
+
+                </Frame>
+
+            </Grid>
+
+        </Frame>
+    </Grid>
+</ContentPage>
