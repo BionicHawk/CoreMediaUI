@@ -8,6 +8,7 @@ namespace CoreMediaUI.Views.Components.Globals;
 public partial class MainActions : ContentView
 {
 	public static bool ApiStarted { get; private set; } = false;
+	public static bool WirelessContollerStarted { get; private set; } = false;
 	public static bool MouseStarted { get; private set; } = false;
 
 	public const string cmd = "powershell.exe";
@@ -19,21 +20,23 @@ public partial class MainActions : ContentView
 	public MainActions()
 	{
 		InitializeComponent();
-		AtStart();
+		UpdateConnectionState();
 	}
 
-	private void AtStart() {
-		GetDNS.GetListDNS();
-
+	private void UpdateConnectionState() {
 		var address = GetDNS.workingAddress;
+		WirelessMouseController.label = caca;
 		var port = GetDNS.workingAPIPort;
 		var mousePort = GetDNS.wiringMouseControllerPort;
-		var urlAddress = $"http://{address}:{port}/";
+		var urlAddress = address != null? $"http://{address}:{port}/" : "No disponible";
 
-		AddressLabel.Text += $" {address}";
-		PortLabel.Text += $" {port}";
-		CompleteURLLabel.Text += $" {urlAddress}";
+		AddressLabel.Text = $"Dirección IP: {address}";
+		PortLabel.Text = $"Puerto: {port}";
+		CompleteURLLabel.Text = $"URL: {urlAddress}";
+		ipPicker.ItemsSource = GetDNS.AvailableAddresses;
 
+		StartAPIButton.IsEnabled = address != null;
+		StartMouseButton.IsEnabled = address != null;
 	}
 
     private void StartAPIButton_Clicked(object sender, EventArgs e) {
@@ -44,14 +47,30 @@ public partial class MainActions : ContentView
 				ApiStarted = Server.TryInitializeServer(address.ToString(), port);
 			}
 			StartAPIButton.Text = ApiStarted? "Activo" : "Detenido";
+			ipPicker.IsEnabled = !ApiStarted && !WirelessContollerStarted;
 			return;
 		}
 
 		ApiStarted = !Server.TryCloseServer();
         StartAPIButton.Text = ApiStarted ? "Activo" : "Detenido";
+        ipPicker.IsEnabled = !ApiStarted && !WirelessContollerStarted;
     }
 
     private void StartMouseButton_Clicked(object sender, EventArgs e) {
+		// TODO: this is not implemented yet, because the component for this is not available
+		if (!WirelessContollerStarted) {
+			WirelessContollerStarted = WirelessMouseController.TryInitializeService();
+			StartMouseButton.Text = WirelessContollerStarted ? "Activo" : "Detenido";
+            ipPicker.IsEnabled = !WirelessContollerStarted && !ApiStarted;
+            return;
+		}
+        WirelessContollerStarted = !WirelessMouseController.ShutdownService();
+        StartMouseButton.Text = WirelessContollerStarted ? "Activo" : "Detenido";
+        ipPicker.IsEnabled = !WirelessContollerStarted && !ApiStarted;
+    }
 
+    private void ipPicker_SelectedIndexChanged(object sender, EventArgs e) {
+		GetDNS.workingAddress = GetDNS.AvailableAddresses[ipPicker.SelectedIndex];
+		UpdateConnectionState();
     }
 }

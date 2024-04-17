@@ -11,9 +11,15 @@
             FontAttributes="Bold"
             Margin="0, 0, 0, 20"/>
 
+        <Picker x:Name="ipPicker" 
+                Title="Seleccione una IP" 
+                Margin="0,20,0,20"
+                SelectedIndexChanged="ipPicker_SelectedIndexChanged"/>
+        
         <Label x:Name="AddressLabel" Text="Dirección IP:" TextColor="BlueViolet"/>
         <Label x:Name="PortLabel" Text="Puerto:" TextColor="BlueViolet"/>
         <Label x:Name="CompleteURLLabel" Text="URL:" TextColor="BlueViolet"/>
+
 
         <Grid RowSpacing="8">
             <Grid.RowDefinitions>
@@ -47,6 +53,8 @@
                         Clicked="StartMouseButton_Clicked"/>
             </Grid>
         </Grid>
+
+        <Label x:Name="caca"/>
 
     </VerticalStackLayout>
 </ContentView>

@@ -25,6 +25,9 @@ namespace CoreMediaUI.Source.Api {
                 FileName = cmd,
                 WorkingDirectory = API_PATH,
                 RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
                 UseShellExecute = false
             };
 

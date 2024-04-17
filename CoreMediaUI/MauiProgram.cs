@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CoreMediaUI.Source;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace CoreMediaUI {
     public static class MauiProgram {
+
         public static MauiApp CreateMauiApp() {
+            GetDNS.GetAvailableIPV4s();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

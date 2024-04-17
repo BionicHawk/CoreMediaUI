@@ -9,9 +9,16 @@ namespace CoreMediaUI.Source
 {
     public static class GetDNS {
         private static string _hostname = Dns.GetHostName();
-        public static IPAddress? workingAddress { get; private set; } = null;
+        public static IPAddress? workingAddress { get; set; } = null;
         public static readonly ushort workingAPIPort = 3001;
         public static readonly ushort wiringMouseControllerPort;
+        public static List<IPAddress> AvailableAddresses = [];
+
+        public static List<IPAddress> GetAvailableIPV4s() {
+            AvailableAddresses = Dns.GetHostAddresses(_hostname).Where(addr =>
+                addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).ToList();
+            return AvailableAddresses;
+        }
 
         public static void GetListDNS() {
             var addresses  = Dns.GetHostAddresses(_hostname);
@@ -21,6 +28,7 @@ namespace CoreMediaUI.Source
                     workingAddress = address; 
                 }
             }
+            AvailableAddresses = [.. addresses];
         }
     }
 }
