@@ -34,7 +34,7 @@
                 </Frame>
 
                 <Frame Background="WhiteSmoke" Grid.Column="1">
-
+                    <globals:MouseSettings />
                 </Frame>
 
                 <Frame Background="WhiteSmoke" Grid.Column="1" Grid.Row="1">

@@ -51,7 +51,7 @@ public partial class MainActions : ContentView
 			return;
 		}
 
-		ApiStarted = !Server.TryCloseServer();
+        ApiStarted = !Server.TryCloseServer();
         StartAPIButton.Text = ApiStarted ? "Activo" : "Detenido";
         ipPicker.IsEnabled = !ApiStarted && !WirelessContollerStarted;
     }
@@ -72,5 +72,6 @@ public partial class MainActions : ContentView
     private void ipPicker_SelectedIndexChanged(object sender, EventArgs e) {
 		GetDNS.workingAddress = GetDNS.AvailableAddresses[ipPicker.SelectedIndex];
 		UpdateConnectionState();
+		Console.WriteLine("Cambiando...");
     }
 }

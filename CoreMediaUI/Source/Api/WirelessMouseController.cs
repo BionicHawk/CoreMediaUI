@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace CoreMediaUI.Source.Api {
         private static TcpListener? _listener;
         public static Label label { get; set; } = null!;
         private static Thread? _whileLoopWaitingConnection;
-        private static bool run = true;
 
         public static bool TryInitializeService() {
             var address = GetDNS.workingAddress;
@@ -22,10 +22,9 @@ namespace CoreMediaUI.Source.Api {
 
             _listener = new(address, port);
             
-            _whileLoopWaitingConnection = new Thread(() => {
-                run = true;
+            _whileLoopWaitingConnection = new Thread(() => { 
                 _listener.Start();
-                while(run) {
+                while(true) {
                     var client = _listener.AcceptTcpClient();
 
                     while (client.Connected) {
@@ -34,8 +33,7 @@ namespace CoreMediaUI.Source.Api {
                         byte[] buffer = new byte[1024];
                         ns.Read(buffer, 0, buffer.Length);
 
-                        label.Text = buffer.ToString();
-                        Debug.WriteLine(buffer.ToString());
+                        Console.WriteLine(Encoding.UTF8.GetString(buffer));
                     }
                 }
             });
@@ -46,7 +44,6 @@ namespace CoreMediaUI.Source.Api {
 
         public static bool ShutdownService() {
             if (_listener != null && _whileLoopWaitingConnection != null) {
-                run = false;
                 _whileLoopWaitingConnection.Interrupt();
                 return true;
             }
