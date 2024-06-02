@@ -10,44 +10,34 @@ using System.Threading.Tasks;
 namespace CoreMediaUI.Source.Api {
     public static class WirelessMouseController {
 
-        private static TcpListener? _listener;
+        private static string WirelessControllerPath = "C:\\dev\\projects\\WirelessPointerDriver\\bin\\Release\\net8.0\\win-x64\\native\\WirelessPointerDriver.exe";
+        private static Process? _process;
         public static Label label { get; set; } = null!;
-        private static Thread? _whileLoopWaitingConnection;
+        public static bool IsActive { get; private set; } = false;
 
         public static bool TryInitializeService() {
-            var address = GetDNS.workingAddress;
-            var port = GetDNS.wiringMouseControllerPort;
+            ProcessStartInfo startInfo = new() {
+                FileName = WirelessControllerPath,
+                Arguments = $"{GetDNS.workingAddress} {GetDNS.wiringMouseControllerPort}",
+            };
 
-            if (address == null) return false;
+            _process = new() {
+                StartInfo = startInfo
+            };
 
-            _listener = new(address, port);
+            _process.Start();
+            IsActive = true;
             
-            _whileLoopWaitingConnection = new Thread(() => { 
-                _listener.Start();
-                while(true) {
-                    var client = _listener.AcceptTcpClient();
-
-                    while (client.Connected) {
-                        var ns = client.GetStream();
-
-                        byte[] buffer = new byte[1024];
-                        ns.Read(buffer, 0, buffer.Length);
-
-                        Console.WriteLine(Encoding.UTF8.GetString(buffer));
-                    }
-                }
-            });
-
-            _whileLoopWaitingConnection.Start();
-            return true;
+            return IsActive;
         }
 
         public static bool ShutdownService() {
-            if (_listener != null && _whileLoopWaitingConnection != null) {
-                _whileLoopWaitingConnection.Interrupt();
-                return true;
+            if (_process != null) {
+                _process.Kill();
+                IsActive = false;
             }
-            return false;
+
+            return IsActive;
         }
 
     }

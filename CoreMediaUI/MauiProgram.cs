@@ -8,7 +8,7 @@ namespace CoreMediaUI {
 
         public static MauiApp CreateMauiApp() {
             GetDNS.GetAvailableIPV4s();
-            ConfigBuilder.InitializeService();
+            //ConfigBuilder.InitializeService();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
